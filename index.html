@@ -28,7 +28,7 @@
 
       function sendRequest() {
         console.log("request called");
-        fetch("https://webhook.site/da2b574f-7a6f-4046-8665-934dbf7e2b7d", {
+        fetch("https://webhook.site/65fed4de-5718-4749-8924-989671b9016a", {
           method: "POST",
           mode: "no-cors",
           headers: { "Content-Type": "application/json" },
@@ -38,13 +38,11 @@
       }
 
       document.getElementById("hitMeButton").addEventListener("click", () => {
-        const requestData = { timestamp: new Date().toISOString() };
-
         if (navigator.onLine) {
           sendRequest();
         } else {
           console.log("Offline: Buffering request...");
-          bufferedRequests.push(requestData);
+          bufferedRequests.push({});
           localStorage.setItem("bufferedRequests", JSON.stringify(bufferedRequests));
         }
       });
