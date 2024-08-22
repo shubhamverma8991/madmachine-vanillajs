@@ -8,7 +8,46 @@
   </head>
   <body>
     <div class="parent">
-      <div class="child"><button>Hit Me</button></div>
+      <div class="child"><button id="hitMeButton">Hit Me</button></div>
     </div>
+    <script>
+      let bufferedRequests = JSON.parse(localStorage.getItem("bufferedRequests")) || [];
+
+      window.addEventListener("online", handleOnline);
+
+      function handleOnline() {
+        console.log("Online: Sending buffered requests...", bufferedRequests);
+
+        bufferedRequests.forEach(() => {
+          sendRequest();
+        });
+
+        bufferedRequests = [];
+        localStorage.removeItem("bufferedRequests");
+      }
+
+      function sendRequest() {
+        console.log("request called");
+        fetch("https://webhook.site/da2b574f-7a6f-4046-8665-934dbf7e2b7d", {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+        })
+          .then((response) => console.log("Request sent:", response))
+          .catch((error) => console.error("Error sending request:", error));
+      }
+
+      document.getElementById("hitMeButton").addEventListener("click", () => {
+        const requestData = { timestamp: new Date().toISOString() };
+
+        if (navigator.onLine) {
+          sendRequest();
+        } else {
+          console.log("Offline: Buffering request...");
+          bufferedRequests.push(requestData);
+          localStorage.setItem("bufferedRequests", JSON.stringify(bufferedRequests));
+        }
+      });
+    </script>
   </body>
 </html>
